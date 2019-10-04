@@ -1,15 +1,19 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: user
- * Date: 04.10.19
- * Time: 23:10
- */
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Artisan;
 
-class UpdateController
+class UpdateController extends Controller
 {
+    public function indexAction()
+    {
+        return view('update');
+    }
 
+    public function updateAction()
+    {
+        Artisan::call('agsat:update');
+        return response()->json(['ok' => true]);
+    }
 }

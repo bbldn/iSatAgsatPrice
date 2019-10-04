@@ -2,71 +2,60 @@
 
 namespace App\Http\Controllers;
 
-use GuzzleHttp\Cookie\SessionCookieJar;
-use GuzzleHttp\Psr7\Response;
+use App\Other\Agsat;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Kozz\Laravel\Facades\Guzzle;
 
-class TestController extends Controller
+class IndexController extends Controller
 {
-    protected $cookieKey = 'PHPSESSID';
-    protected $guzzleDebug = false;
-
-    protected function login()
+    protected function getProducts(Agsat $agsat)
     {
-        $response = Guzzle::request('POST', 'https://www.agsat.com.ua/login/', [
-            'form_params' => [
-                'login' => env('ALOGIN'),
-                'password' => env('APASSWORD'),
-            ],
-            'headers' => [
-                'User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36',
+        $json = Cache::get('CACH1E');
 
-            ],
-            'debug' => $this->guzzleDebug,
-            'allow_redirects' => false,
-        ]);
-
-        $this->setCookie($response);
-    }
-
-    protected function setCookie(Response $response)
-    {
-        $cookies = [];
-        $arr = [];
-        foreach ($response->getHeader('Set-Cookie') as $value) {
-            preg_match('/([^=]+)=([^;]+);/', $value, $arr);
-            $cookies[$arr[1]] = $arr[2];
+        if ($json == null) {
+            $json = $agsat->getProducts();
+            Cache::forever('CACH1E', $json);
         }
 
-        Cache::forever($this->cookieKey, json_encode($cookies));
+        return json_decode(json_decode($json, true), true);
     }
 
-    public function testAction()
+    protected function getDollarRate(Agsat $agsat)
     {
-//        if (!Cache::has($this->cookieKey)) {
-            $this->login();
-//        }
+        $rate = Cache::get('DOLLARRATE');
 
-        $cookies = SessionCookieJar::fromArray(json_decode(Cache::get($this->cookieKey), true), 'www.agsat.com.ua');
+        if ($rate == null) {
+            $rate = $agsat->getDollarRate();
+            Cache::forever('DOLLARRATE', $rate);
+        }
 
-        $response = Guzzle::request('GET', 'https://www.agsat.com.ua/json/pricelist/', [
-            'headers' => [
-                'User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36',
-            ],
-            'debug' => $this->guzzleDebug,
-            'cookies' => $cookies,
-            'allow_redirects' => false,
-        ]);
-        $this->setCookie($response);
-        echo strval($response->getBody());
-//        dd(strval($response->getBody()));
-//        dd($response->getHeader('Loca1tion'));
-//
-//
-//
-//        Cache::set('ttt', 12);
-//        Cache::forget('ttt');
-//        dd(Cache::get('ttt'));
+        return $rate;
+    }
+
+    public function searchAction(Request $request, Agsat $agsat)
+    {
+        $data = $this->getProducts($agsat);
+
+        $products = collect($data['data']['products']);
+        $query = $request->get('q');
+
+        if (isset($query)) {
+            $products = $products->filter(function ($item) use ($query) {
+                return false !== stristr($item['name'], $query);
+            });
+        }
+
+        $data = [
+            'products' => $products,
+            'rate' => $this->getDollarRate($agsat),
+        ];
+
+        return view('search', $data);
+    }
+
+    public function indexAction(Agsat $agsat)
+    {
+        $rate = $this->getDollarRate($agsat);
+        return view('index', ['rate' => $rate]);
     }
 }
