@@ -9,8 +9,8 @@
         "ext-json": "*",
         "guzzlehttp/guzzle": "^6.3",
         "kozz/laravel-guzzle-provider": "^6.1",
-        "laravel/lumen-framework": "^6.0",
-        "sunra/php-simple-html-dom-parser": "^1.5"
+        "kub-at/php-simple-html-dom-parser": "^1.9",
+        "laravel/lumen-framework": "^6.0"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.4",

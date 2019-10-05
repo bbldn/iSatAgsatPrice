@@ -6,8 +6,7 @@ use GuzzleHttp\Cookie\SessionCookieJar;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Facades\Cache;
 use Kozz\Laravel\Facades\Guzzle;
-use Sunra\PhpSimple\HtmlDomParser;
-
+use KubAT\PhpSimple\HtmlDomParser;
 
 class Agsat
 {
