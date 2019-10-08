@@ -57,16 +57,16 @@
         document.getElementById('rectangle').classList.toggle('red-back');
         flag = true;
 
-        let xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function () {
+        let xHTTP = new XMLHttpRequest();
+        xHTTP.onreadystatechange = function () {
             if (this.status === 200) {
                 document.getElementById('text-2').classList.toggle('d-block');
                 document.getElementById('text-3').classList.toggle('d-block');
                 document.getElementById('rectangle').classList.toggle('green-back');
             }
         };
-        xhttp.open("GET", '/api/update', true);
-        xhttp.send();
+        xHTTP.open('GET', '/api/update', true);
+        xHTTP.send();
     });
 </script>
 

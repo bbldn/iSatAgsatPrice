@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <title>Привет</title>
+
 </head>
 
 <body>
@@ -9,6 +9,7 @@
     <tr>
         <td>ID</td>
         <td>Название</td>
+        <td>Артикул</td>
         <td>Ссылка</td>
         <td>Розница</td>
         <td>Дилер</td>
@@ -19,16 +20,12 @@
         <tr>
             <td>{{$product['id']}}</td>
             <td>{{$product['name']}}</td>
+            <td>{{$product['sku']}}</td>
             <td>
-                <a href="https://www.agsat.com.ua{{$product['frontend_url']}}">Перейти</a>
+                <a href="https://www.agsat.com.ua{{$product['frontend_url']}}" target="_blank">Перейти</a>
             </td>
-
             @foreach ($product['prices'] as $price)
-                @if ($price['category_id'] != 1)
-                    <td>{{$price['price'] * $rate}}</td>
-                @else
-                    <td>{{$price['price']}}</td>
-                @endif
+                <td>{{$price['price']}}</td>
             @endforeach
         </tr>
     @endforeach

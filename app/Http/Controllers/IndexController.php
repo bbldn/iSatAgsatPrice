@@ -8,46 +8,30 @@ use Illuminate\Support\Facades\Cache;
 
 class IndexController extends Controller
 {
-    protected function getProducts(Agsat $agsat)
+    protected function getProducts()
     {
-        $json = Cache::get('CACH1E');
-
-        if ($json == null) {
-            $json = $agsat->getProducts();
-            Cache::forever('CACH1E', $json);
-        }
-
-        return json_decode(json_decode($json, true), true);
+        return json_decode(Cache::get('JSONProducts'), true);
     }
 
-    protected function getDollarRate(Agsat $agsat)
+    protected function getDollarRate()
     {
-        $rate = Cache::get('DOLLARRATE');
-
-        if ($rate == null) {
-            $rate = $agsat->getDollarRate();
-            Cache::forever('DOLLARRATE', $rate);
-        }
-
-        return $rate;
+        return Cache::get('DollarRate');
     }
 
-    public function searchAction(Request $request, Agsat $agsat)
+    public function searchAction(Request $request)
     {
-        $data = $this->getProducts($agsat);
-
-        $products = collect($data['data']['products']);
+        $products = collect($this->getProducts());
         $query = $request->get('q');
 
         if (isset($query)) {
             $products = $products->filter(function ($item) use ($query) {
-                return false !== stristr($item['name'], $query);
+                return false !== stristr($item['name'], $query) || false !== stristr($item['sku'], $query);
             });
         }
 
         $data = [
             'products' => $products,
-            'rate' => $this->getDollarRate($agsat),
+            'rate' => $this->getDollarRate(),
         ];
 
         return view('search', $data);
@@ -57,5 +41,10 @@ class IndexController extends Controller
     {
         $rate = $this->getDollarRate($agsat);
         return view('index', ['rate' => $rate]);
+    }
+
+    public function updateIndexAction()
+    {
+        return view('update');
     }
 }

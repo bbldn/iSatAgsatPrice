@@ -10,7 +10,9 @@
         "guzzlehttp/guzzle": "^6.3",
         "kozz/laravel-guzzle-provider": "^6.1",
         "kub-at/php-simple-html-dom-parser": "^1.9",
-        "laravel/lumen-framework": "^6.0"
+        "laravel/lumen-framework": "^6.0",
+        "league/csv": "^9.4",
+        "ext-simplexml": "*"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.4",

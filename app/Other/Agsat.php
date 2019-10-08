@@ -55,7 +55,7 @@ class Agsat
         Cache::forever($this->cookieKey, json_encode($cookies));
     }
 
-    public function getProducts(array $cookies = [])
+    public function getAll(array $cookies = [])
     {
         if (count($cookies) == 0) {
             $cookies = SessionCookieJar::fromArray($this->login($this->saveCookie), 'www.agsat.com.ua');
