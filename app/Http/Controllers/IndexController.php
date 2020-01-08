@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Other\Agsat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
 class IndexController extends Controller
@@ -20,12 +21,12 @@ class IndexController extends Controller
 
     public function searchAction(Request $request)
     {
-        $products = collect($this->getProducts());
-        $query = $request->get('q');
+        $products = Collection::make($this->getProducts());
 
-        if (isset($query)) {
+        if ($request->has('q')) {
+            $query = $request->get('q');
             $products = $products->filter(function ($item) use ($query) {
-                return false !== stristr($item['name'], $query) || false !== stristr($item['sku'], $query);
+                return false !== mb_stristr($item['name'], $query) || false !== mb_stristr($item['sku'], $query);
             });
         }
 
