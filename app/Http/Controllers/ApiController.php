@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
 class ApiController extends Controller
@@ -51,7 +52,7 @@ class ApiController extends Controller
         return response($data)->header('Content-Type', $contentType);
     }
 
-    public function productsSearchAction($format = 'json')
+    public function productsSearchAction(Request $request, $format = 'json')
     {
         $response = $this->validateFormat($format);
         if ($response != null) {
@@ -69,6 +70,19 @@ class ApiController extends Controller
         $data = Cache::get($key);
 
         $response = $this->validateData($data);
+
+        $data = json_decode($data, true);
+
+
+        if ($request->get('currency', 1) == 2) {
+            $dollarRate = Cache::get('DollarRate');
+            foreach ($data as &$item) {
+                foreach ($item['prices'] as &$value) {
+                    $value['price'] /= $dollarRate;
+                }
+            }
+        }
+
         if ($response != null) {
             return $response;
         }
@@ -99,5 +113,10 @@ class ApiController extends Controller
         }
 
         return response($data)->header('Content-Type', $contentType);
+    }
+
+    public function getDollarRateAction()
+    {
+        return response()->json(['rate' => Cache::get('DollarRate', 40)]);
     }
 }
