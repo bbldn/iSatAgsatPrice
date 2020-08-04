@@ -2,17 +2,13 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-(new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(dirname(__DIR__)))->bootstrap();
+$path = dirname(__DIR__);
+(new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables($path))->bootstrap();
 
-$app = new Laravel\Lumen\Application(dirname(__DIR__));
+$app = new Laravel\Lumen\Application($path);
 
-$aliases = [
-    Kozz\Laravel\Facades\Guzzle::class => 'Guzzle',
-];
-
-
-$app->withFacades(true, $aliases);
-$app->withEloquent();
+$app->withFacades();
+//$app->withEloquent();
 
 $app->singleton(Illuminate\Contracts\Debug\ExceptionHandler::class, App\Exceptions\Handler::class);
 $app->singleton(Illuminate\Contracts\Console\Kernel::class, App\Console\Kernel::class);
@@ -20,7 +16,6 @@ $app->singleton(Illuminate\Contracts\Console\Kernel::class, App\Console\Kernel::
 $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Kozz\Laravel\Providers\Guzzle::class);
-
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
