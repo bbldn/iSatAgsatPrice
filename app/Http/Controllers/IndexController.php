@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Symfony\Component\HttpFoundation\Response;
 
 class IndexController extends Controller
 {
@@ -31,9 +31,9 @@ class IndexController extends Controller
 
     /**
      * @param Request $request
-     * @return Response
+     * @return View
      */
-    public function searchAction(Request $request): Response
+    public function searchAction(Request $request): View
     {
         $products = $this->getProducts();
         if (true === $request->has('q')) {
@@ -53,9 +53,9 @@ class IndexController extends Controller
     }
 
     /**
-     * @return Response
+     * @return View
      */
-    public function indexAction(): Response
+    public function indexAction(): View
     {
         $data = [
             'rate' => $this->getDollarRate(),
@@ -64,10 +64,11 @@ class IndexController extends Controller
         return view('index', $data);
     }
 
+
     /**
-     * @return Response
+     * @return View
      */
-    public function updateIndexAction(): Response
+    public function updateIndexAction(): View
     {
         return view('update');
     }

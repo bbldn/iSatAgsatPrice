@@ -29,7 +29,7 @@ class UpdateCache extends Command
         ],
         'contact_categories' => [
             'id', 'name'
-        ]
+        ],
     ];
 
     /**
@@ -38,7 +38,7 @@ class UpdateCache extends Command
      */
     public function handle(Agsat $agsat): void
     {
-        $rate = $agsat->getDollarRate();
+        $rate = $agsat->getHryvniaRate();
         Cache::forever('DollarRate', $rate);
 
         $arr = json_decode(json_decode($agsat->getAll(), true), true);
@@ -49,9 +49,9 @@ class UpdateCache extends Command
             return;
         }
 
-        $data = $arr['data'];
+        $arr = $arr['data'];
 
-        foreach ($data['products'] as &$product) {
+        foreach ($arr['products'] as &$product) {
             foreach ($product['prices'] as &$price) {
                 if (1 !== $price['category_id']) {
                     $price['price'] *= $rate;
@@ -59,15 +59,15 @@ class UpdateCache extends Command
             }
         }
 
-        Cache::forever('JSONAll', json_encode($data));
+        Cache::forever('JSONAll', json_encode($arr));
 
-        Cache::forever('JSONProducts', json_encode($data['products']));
-        Cache::forever('JSONCategories', json_encode($data['categories']));
-        Cache::forever('JSONContactCategories', json_encode($data['contact_categories']));
+        Cache::forever('JSONProducts', json_encode($arr['products']));
+        Cache::forever('JSONCategories', json_encode($arr['categories']));
+        Cache::forever('JSONContactCategories', json_encode($arr['contact_categories']));
 
-        Cache::forever('CSVProducts', $this->productsToCSV($data['products'], $this->headers['products']));
-        Cache::forever('CSVCategories', $this->categoriesToCSV($data['categories'], $this->headers['categories']));
-        Cache::forever('CSVContactCategories', $this->contactCategoriesToCSV($data['contact_categories'], $this->headers['contact_categories']));
+        Cache::forever('CSVProducts', $this->productsToCSV($arr['products'], $this->headers['products']));
+        Cache::forever('CSVCategories', $this->categoriesToCSV($arr['categories'], $this->headers['categories']));
+        Cache::forever('CSVContactCategories', $this->contactCategoriesToCSV($arr['contact_categories'], $this->headers['contact_categories']));
 
         $this->info('ok');
     }

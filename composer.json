@@ -7,12 +7,13 @@
     "require": {
         "php": "^7.2",
         "ext-json": "*",
+        "ext-simplexml": "*",
         "guzzlehttp/guzzle": "^6.3",
         "kozz/laravel-guzzle-provider": "^6.1",
         "kub-at/php-simple-html-dom-parser": "^1.9",
         "laravel/lumen-framework": "^6.0",
         "league/csv": "^9.4",
-        "ext-simplexml": "*"
+        "mlntn/lumen-artisan-serve": "^1.3"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.4",
