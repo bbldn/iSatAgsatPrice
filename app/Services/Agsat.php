@@ -9,7 +9,7 @@ use GuzzleHttp\Psr7\Response;
 use Kozz\Laravel\Facades\Guzzle;
 use KubAT\PhpSimple\HtmlDomParser;
 
-class Agsat
+class Agsat extends Service
 {
     /** @var AgsatContext $agsatContext */
     protected $agsatContext;
