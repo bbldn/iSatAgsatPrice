@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Other;
+namespace App\Services;
 
+use App\Contexts\AgsatContext;
 use GuzzleHttp\Cookie\SessionCookieJar;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Facades\Cache;
@@ -10,14 +11,23 @@ use KubAT\PhpSimple\HtmlDomParser;
 
 class Agsat
 {
+    /** @var AgsatContext $agsatContext */
+    protected $agsatContext;
+
     /** @var string $cookieKey */
     protected $cookieKey = 'PHPSESSID';
 
-    /** @var bool $guzzleDebug */
-    protected $guzzleDebug = false;
-
     /** @var bool $saveCookie */
     protected $saveCookie = false;
+
+    /**
+     * Agsat constructor.
+     * @param AgsatContext $agsatContext
+     */
+    public function __construct(AgsatContext $agsatContext)
+    {
+        $this->agsatContext = $agsatContext;
+    }
 
     /**
      * @param bool $saveCookie
@@ -25,16 +35,17 @@ class Agsat
      */
     protected function login(bool $saveCookie = true): array
     {
+        /** @noinspection PhpUndefinedMethodInspection */
+        /** @var Response $response */
         $response = Guzzle::request('POST', 'https://www.agsat.com.ua/login/', [
             'form_params' => [
-                'login' => env('ALOGIN'),
-                'password' => env('APASSWORD'),
+                'login' => $this->agsatContext->getLogin(),
+                'password' => $this->agsatContext->getPassword(),
             ],
             'headers' => [
-                'User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36',
+                'User-Agent' => $this->agsatContext->getUserAgent(),
 
             ],
-            'debug' => $this->guzzleDebug,
             'allow_redirects' => false,
         ]);
 
@@ -80,11 +91,12 @@ class Agsat
             $cookies = SessionCookieJar::fromArray($this->login($this->saveCookie), 'www.agsat.com.ua');
         }
 
+        /** @noinspection PhpUndefinedMethodInspection */
+        /** @var Response $response */
         $response = Guzzle::request('GET', 'https://www.agsat.com.ua/json/pricelist/', [
             'headers' => [
-                'User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36',
+                'User-Agent' => $this->agsatContext->getUserAgent(),
             ],
-            'debug' => $this->guzzleDebug,
             'cookies' => $cookies,
             'allow_redirects' => false,
         ]);
@@ -93,7 +105,7 @@ class Agsat
             $this->saveCookies($this->parseCookies($response));
         }
 
-        return json_encode(strval($response->getBody()));
+        return json_encode((string)$response->getBody());
     }
 
     /**
@@ -106,22 +118,19 @@ class Agsat
             $cookies = SessionCookieJar::fromArray($this->login($this->saveCookie), 'www.agsat.com.ua');
         }
 
+        /** @noinspection PhpUndefinedMethodInspection */
+        /** @var Response $response */
         $response = Guzzle::request('GET', 'https://www.agsat.com.ua', [
             'headers' => [
-                'User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36',
+                'User-Agent' => $this->agsatContext->getUserAgent(),
             ],
-            'debug' => $this->guzzleDebug,
             'cookies' => $cookies,
             'allow_redirects' => false,
         ]);
 
-        $html = (string)$response->getBody();
-
-        $dom = HtmlDomParser::str_get_html($html);
-
+        $dom = HtmlDomParser::str_get_html((string)$response->getBody());
         $dollarRate = $dom->find('#top_right_nav li .navbar-text .siteprof_currency', 0)->text();
 
-        $matches = [];
         preg_match('/^1\$ = (.+?) грн /', $dollarRate, $matches);
 
         return (float)$matches[1];

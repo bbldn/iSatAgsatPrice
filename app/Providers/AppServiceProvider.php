@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Contexts\AgsatContext;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,5 +12,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->singleton(AgsatContext::class, function () {
+            return new AgsatContext(
+                env('ALOGIN'),
+                env('APASSWORD'),
+                'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36'
+            );
+        });
     }
 }
