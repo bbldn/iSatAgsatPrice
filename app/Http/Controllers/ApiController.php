@@ -4,34 +4,51 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Symfony\Component\HttpFoundation\Response;
 
 class ApiController extends Controller
 {
-    protected $supportedFormats = ['json', 'csv'];
+    /** @var string[] $supportedFormats */
+    protected $supportedFormats = [
+        'json',
+        'csv',
+    ];
 
-    protected function validateFormat($format)
+    /**
+     * @param string $format
+     * @return array
+     */
+    protected function validateFormat(string $format): ?array
     {
-        if (!in_array($format, $this->supportedFormats)) {
-            return response()->json(['ok' => false, 'errors' => ['Unsupported format']]);
+        if (false === in_array($format, $this->supportedFormats)) {
+            return ['ok' => false, 'errors' => ['Unsupported format']];
         }
 
         return null;
     }
 
-    protected function validateData($data)
+    /**
+     * @param array|null $data
+     * @return array|null
+     */
+    protected function validateData(?array $data): ?array
     {
-        if ($data == null) {
-            return response()->json(['ok' => false, 'errors' => ['No data found, refresh cache']]);
+        if (null === $data) {
+            return ['ok' => false, 'errors' => ['No data found, refresh cache']];
         }
 
         return null;
     }
 
-    public function categoriesSearchAction($format = 'json')
+    /**
+     * @param string $format
+     * @return Response
+     */
+    public function categoriesSearchAction(string $format = 'json'): Response
     {
         $response = $this->validateFormat($format);
-        if ($response != null) {
-            return $response;
+        if (null !== $response) {
+            return response()->json($response);
         }
 
         if ($format == 'json') {
@@ -45,21 +62,26 @@ class ApiController extends Controller
         $data = Cache::get($key);
 
         $response = $this->validateData($data);
-        if ($response != null) {
-            return $response;
+        if (null !== $response) {
+            return response()->json($response);
         }
 
         return response($data)->header('Content-Type', $contentType);
     }
 
-    public function productsSearchAction(Request $request, $format = 'json')
+    /**
+     * @param Request $request
+     * @param string $format
+     * @return Response
+     */
+    public function productsSearchAction(Request $request, $format = 'json'): Response
     {
         $response = $this->validateFormat($format);
-        if ($response != null) {
-            return $response;
+        if (null !== $response) {
+            return response()->json($response);
         }
 
-        if ($format == 'json') {
+        if ('json' === $format) {
             $key = 'JSONProducts';
             $contentType = 'application/json';
         } else {
@@ -67,14 +89,15 @@ class ApiController extends Controller
             $contentType = 'text/csv';
         }
 
-        $data = Cache::get($key);
-
+        $data = Cache::get($key, null);
         $response = $this->validateData($data);
+        if (null !== $response) {
+            return response()->json($response);
+        }
 
         $data = json_decode($data, true);
-
-
-        if ($request->get('currency', 1) == 2) {
+        //@TODO check false
+        if (2 === (int)$request->get('currency', 1)) {
             $dollarRate = Cache::get('DollarRate');
             foreach ($data as &$item) {
                 foreach ($item['prices'] as &$value) {
@@ -83,21 +106,25 @@ class ApiController extends Controller
             }
         }
 
-        if ($response != null) {
-            return $response;
+        if (null !== $response) {
+            return response()->json($response);
         }
 
         return response($data)->header('Content-Type', $contentType);
     }
 
-    public function contactCategoriesSearchAction($format = 'json')
+    /**
+     * @param string $format
+     * @return Response
+     */
+    public function contactCategoriesSearchAction(string $format = 'json'): Response
     {
         $response = $this->validateFormat($format);
-        if ($response != null) {
-            return $response;
+        if (null !== $response) {
+            return response()->json($response);
         }
 
-        if ($format == 'json') {
+        if ('json' === $format) {
             $key = 'JSONContactCategories';
             $contentType = 'application/json';
         } else {
@@ -108,14 +135,17 @@ class ApiController extends Controller
         $data = Cache::get($key);
 
         $response = $this->validateData($data);
-        if ($response != null) {
-            return $response;
+        if (null !== $response) {
+            return response()->json($response);
         }
 
         return response($data)->header('Content-Type', $contentType);
     }
 
-    public function getDollarRateAction()
+    /**
+     * @return Response
+     */
+    public function getDollarRateAction(): Response
     {
         return response()->json(['rate' => Cache::get('DollarRate', 40)]);
     }

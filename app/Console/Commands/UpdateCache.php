@@ -5,13 +5,18 @@ namespace App\Console\Commands;
 use App\Other\Agsat;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
+use League\Csv\CannotInsertRecord;
 use League\Csv\Writer;
 
 class UpdateCache extends Command
 {
+    /** @var string $signature */
     protected $signature = 'agsat:update';
+
+    /** @var string $description */
     protected $description = 'Update cache';
 
+    /** @var array $headers */
     protected $headers = [
         'products' => [
             'id', 'name', 'url',
@@ -27,15 +32,20 @@ class UpdateCache extends Command
         ]
     ];
 
-    public function handle(Agsat $agsat)
+    /**
+     * @param Agsat $agsat
+     * @throws CannotInsertRecord
+     */
+    public function handle(Agsat $agsat): void
     {
         $rate = $agsat->getDollarRate();
         Cache::forever('DollarRate', $rate);
 
         $arr = json_decode(json_decode($agsat->getAll(), true), true);
 
-        if ($arr['status'] != 'ok') {
+        if ('ok' !== $arr['status']) {
             $this->info('error');
+
             return;
         }
 
@@ -43,7 +53,7 @@ class UpdateCache extends Command
 
         foreach ($data['products'] as &$product) {
             foreach ($product['prices'] as &$price) {
-                if ($price['category_id'] != 1) {
+                if (1 !== $price['category_id']) {
                     $price['price'] *= $rate;
                 }
             }
@@ -62,21 +72,29 @@ class UpdateCache extends Command
         $this->info('ok');
     }
 
-    protected function productsToCSV(array $data, $header = null)
+    /**
+     * @param array $data
+     * @param array|null $header
+     * @return string
+     * @throws CannotInsertRecord
+     */
+    protected function productsToCSV(array $data, ?array $header = null): string
     {
         $productsCSV = [];
         foreach ($data as $product) {
             $productCSV = [];
             foreach ($product as $item) {
-                if (is_array($item)) {
+                if (true === is_array($item)) {
                     foreach ($item as $it) {
-                        $productCSV[] = $it['category_id'] . ' - ' . $it['price'];
+                        $productCSV[] = "{$it['category_id']} - {$it['price']}";
                     }
                     continue;
                 }
-                if (is_bool($item)) {
+
+                if (true === is_bool($item)) {
                     $item = intval($item);
                 }
+
                 $productCSV[] = $item;
             }
             $productsCSV[] = $productCSV;
@@ -85,7 +103,13 @@ class UpdateCache extends Command
         return $this->toCSV($productsCSV, $header);
     }
 
-    protected function categoriesToCSV(array $data, $header = null)
+    /**
+     * @param array $data
+     * @param array|null $header
+     * @return string
+     * @throws CannotInsertRecord
+     */
+    protected function categoriesToCSV(array $data, ?array $header = null): string
     {
         $categoriesCSV = [];
         foreach ($data as $category) {
@@ -99,7 +123,13 @@ class UpdateCache extends Command
         return $this->toCSV($categoriesCSV, $header);
     }
 
-    protected function contactCategoriesToCSV(array $data, $header = null)
+    /**
+     * @param array $data
+     * @param array|null $header
+     * @return string
+     * @throws CannotInsertRecord
+     */
+    protected function contactCategoriesToCSV(array $data, ?array $header = null): string
     {
         $contactCategoriesCSV = [];
         foreach ($data as $contactCategory) {
@@ -113,11 +143,17 @@ class UpdateCache extends Command
         return $this->toCSV($contactCategoriesCSV, $header);
     }
 
-    protected function toCSV(array $data, $header = null)
+    /**
+     * @param array $data
+     * @param array|null $header
+     * @return string
+     * @throws CannotInsertRecord
+     */
+    protected function toCSV(array $data, ?array $header = null): string
     {
-        $csv = Writer::createFromString('');
+        $csv = Writer::createFromString();
 
-        if ($header != null) {
+        if (true === is_array($header)) {
             $csv->insertOne($header);
         }
 

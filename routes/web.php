@@ -1,8 +1,6 @@
 <?php
 
-//$router->get('/', function () use ($router) {
-//    return $router->app->version();
-//});
+/** @var \Laravel\Lumen\Routing\Router $router */
 
 $router->get('/', 'IndexController@indexAction');
 $router->get('search', 'IndexController@searchAction');

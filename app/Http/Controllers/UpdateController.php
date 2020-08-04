@@ -3,12 +3,22 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Artisan;
+use Symfony\Component\HttpFoundation\Response;
 
 class UpdateController extends Controller
 {
-    public function updateAction()
+    /**
+     * @return Response
+     */
+    public function updateAction(): Response
     {
-        Artisan::call('agsat:update');
-        return response()->json(['ok' => true]);
+        $data = [
+            'ok' => true,
+            'data' => [
+                'status' => Artisan::call('agsat:update'),
+            ],
+        ];
+
+        return response()->json($data);
     }
 }

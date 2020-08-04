@@ -2,30 +2,44 @@
 
 namespace App\Http\Controllers;
 
-use App\Other\Agsat;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Symfony\Component\HttpFoundation\Response;
 
 class IndexController extends Controller
 {
-    protected function getProducts()
+    /**
+     * @return array
+     */
+    protected function getProducts(): array
     {
-        return json_decode(Cache::get('JSONProducts'), true);
+        $products = json_decode(Cache::get('JSONProducts'), true);
+        if (false === $products) {
+            return [];
+        }
+
+        return $products;
     }
 
-    protected function getDollarRate()
+    /**
+     * @return float|null
+     */
+    protected function getDollarRate(): ?float
     {
         return Cache::get('DollarRate');
     }
 
-    public function searchAction(Request $request)
+    /**
+     * @param Request $request
+     * @return Response
+     */
+    public function searchAction(Request $request): Response
     {
-        $products = Collection::make($this->getProducts());
-
-        if ($request->has('q')) {
+        $products = $this->getProducts();
+        if (true === $request->has('q')) {
             $query = $request->get('q');
-            $products = $products->filter(function ($item) use ($query) {
+
+            $products = array_filter($products, function ($item) use ($query) {
                 return false !== mb_stristr($item['name'], $query) || false !== mb_stristr($item['sku'], $query);
             });
         }
@@ -38,13 +52,22 @@ class IndexController extends Controller
         return view('search', $data);
     }
 
-    public function indexAction(Agsat $agsat)
+    /**
+     * @return Response
+     */
+    public function indexAction(): Response
     {
-        $rate = $this->getDollarRate($agsat);
-        return view('index', ['rate' => $rate]);
+        $data = [
+            'rate' => $this->getDollarRate(),
+        ];
+
+        return view('index', $data);
     }
 
-    public function updateIndexAction()
+    /**
+     * @return Response
+     */
+    public function updateIndexAction(): Response
     {
         return view('update');
     }

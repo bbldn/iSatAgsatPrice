@@ -10,11 +10,20 @@ use KubAT\PhpSimple\HtmlDomParser;
 
 class Agsat
 {
+    /** @var string $cookieKey */
     protected $cookieKey = 'PHPSESSID';
+
+    /** @var bool $guzzleDebug */
     protected $guzzleDebug = false;
+
+    /** @var bool $saveCookie */
     protected $saveCookie = false;
 
-    protected function login($saveCookie = true)
+    /**
+     * @param bool $saveCookie
+     * @return array
+     */
+    protected function login(bool $saveCookie = true): array
     {
         $response = Guzzle::request('POST', 'https://www.agsat.com.ua/login/', [
             'form_params' => [
@@ -30,17 +39,20 @@ class Agsat
         ]);
 
         $cookies = $this->parseCookies($response);
-        if ($saveCookie) {
+        if (true === $saveCookie) {
             $this->saveCookies($cookies);
         }
 
         return $cookies;
     }
 
-    protected function parseCookies(Response $response)
+    /**
+     * @param Response $response
+     * @return array
+     */
+    protected function parseCookies(Response $response): array
     {
         $cookies = [];
-        $matches = [];
 
         foreach ($response->getHeader('Set-Cookie') as $value) {
             preg_match('/([^=]+)=([^;]+);/', $value, $matches);
@@ -50,14 +62,21 @@ class Agsat
         return $cookies;
     }
 
-    protected function saveCookies(array $cookies)
+    /**
+     * @param array $cookies
+     */
+    protected function saveCookies(array $cookies): void
     {
         Cache::forever($this->cookieKey, json_encode($cookies));
     }
 
-    public function getAll(array $cookies = [])
+    /**
+     * @param array $cookies
+     * @return false|string
+     */
+    public function getAll(array $cookies = []): string
     {
-        if (count($cookies) == 0) {
+        if (0 === count($cookies)) {
             $cookies = SessionCookieJar::fromArray($this->login($this->saveCookie), 'www.agsat.com.ua');
         }
 
@@ -70,16 +89,20 @@ class Agsat
             'allow_redirects' => false,
         ]);
 
-        if ($this->saveCookie) {
+        if (true === $this->saveCookie) {
             $this->saveCookies($this->parseCookies($response));
         }
 
         return json_encode(strval($response->getBody()));
     }
 
-    public function getDollarRate(array $cookies = [])
+    /**
+     * @param array $cookies
+     * @return mixed
+     */
+    public function getDollarRate(array $cookies = []): float
     {
-        if (count($cookies) == 0) {
+        if (0 === count($cookies)) {
             $cookies = SessionCookieJar::fromArray($this->login($this->saveCookie), 'www.agsat.com.ua');
         }
 
@@ -92,7 +115,7 @@ class Agsat
             'allow_redirects' => false,
         ]);
 
-        $html = strval($response->getBody());
+        $html = (string)$response->getBody();
 
         $dom = HtmlDomParser::str_get_html($html);
 
@@ -101,6 +124,6 @@ class Agsat
         $matches = [];
         preg_match('/^1\$ = (.+?) грн /', $dollarRate, $matches);
 
-        return $matches[1];
+        return (float)$matches[1];
     }
 }
