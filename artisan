@@ -9,6 +9,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 /** @var Application $app */
 $app = require __DIR__ . '/bootstrap/app.php';
 
+
 /** @var Kernel $kernel */
 $kernel = $app->make(Kernel::class);
 
