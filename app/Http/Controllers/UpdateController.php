@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Console\Commands\AgsatCacheUpdateCommand;
 use Illuminate\Support\Facades\Artisan;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -15,7 +16,7 @@ class UpdateController extends Controller
         $data = [
             'ok' => true,
             'data' => [
-                'status' => Artisan::call('agsat:update'),
+                'status' => Artisan::call(AgsatCacheUpdateCommand::class),
             ],
         ];
 

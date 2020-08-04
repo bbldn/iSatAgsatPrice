@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\Cache;
 use League\Csv\CannotInsertRecord;
 use League\Csv\Writer;
 
-class UpdateCache extends Command
+class AgsatCacheUpdateCommand extends Command
 {
     /** @var string $signature */
-    protected $signature = 'agsat:update';
+    protected $signature = 'agsat:cache:update';
 
     /** @var string $description */
     protected $description = 'Update cache';
