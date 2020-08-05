@@ -61,11 +61,6 @@ class ApiController extends Controller
 
         $data = Cache::get($key);
 
-        $response = $this->validateData($data);
-        if (null !== $response) {
-            return response()->json($response);
-        }
-
         return response($data)->header('Content-Type', $contentType);
     }
 
@@ -92,7 +87,6 @@ class ApiController extends Controller
         $data = Cache::get($key, null);
         $data = json_decode($data, true);
 
-        //@TODO check false
         if (false === $data) {
             return response()->json($this->validateData(null));
         }
@@ -133,11 +127,6 @@ class ApiController extends Controller
         }
 
         $data = Cache::get($key);
-
-        $response = $this->validateData($data);
-        if (null !== $response) {
-            return response()->json($response);
-        }
 
         return response($data)->header('Content-Type', $contentType);
     }
