@@ -90,13 +90,13 @@ class ApiController extends Controller
         }
 
         $data = Cache::get($key, null);
-        $response = $this->validateData($data);
-        if (null !== $response) {
-            return response()->json($response);
+        $data = json_decode($data, true);
+
+        //@TODO check false
+        if (false === $data) {
+            return response()->json($this->validateData(null));
         }
 
-        $data = json_decode($data, true);
-        //@TODO check false
         if (2 === (int)$request->get('currency', 1)) {
             $dollarRate = Cache::get('DollarRate');
             foreach ($data as &$item) {
