@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4cf6365f733935d31ab3e90b9cee9749",
+    "content-hash": "3ef0e378314679cbf904536fb4159a65",
     "packages": [
         {
             "name": "brick/math",
@@ -1726,69 +1726,6 @@
             "description": "The Illuminate View package.",
             "homepage": "https://laravel.com",
             "time": "2020-08-04T14:10:54+00:00"
-        },
-        {
-            "name": "kozz/laravel-guzzle-provider",
-            "version": "6.1.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/urakozz/laravel-guzzle.git",
-                "reference": "b59553dd45faead7adea8aeaa7e598e5eb29892f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/urakozz/laravel-guzzle/zipball/b59553dd45faead7adea8aeaa7e598e5eb29892f",
-                "reference": "b59553dd45faead7adea8aeaa7e598e5eb29892f",
-                "shasum": ""
-            },
-            "require": {
-                "guzzlehttp/guzzle": "^6.0",
-                "illuminate/support": "^5.0 | ^6.0 | ^7.0",
-                "php": "^7.2.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                },
-                "laravel": {
-                    "providers": [
-                        "Kozz\\Laravel\\Providers\\Guzzle"
-                    ],
-                    "aliases": {
-                        "Guzzle": "Kozz\\Laravel\\Facades\\Guzzle"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Kozz\\Laravel\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Hongbo Tang",
-                    "email": "thbourlove@gmail.com"
-                },
-                {
-                    "name": "Yury Kozyrev",
-                    "email": "urakozz@gmail.com"
-                }
-            ],
-            "description": "Guzzle 5/6 Service Provider for Laravel",
-            "keywords": [
-                "Guzzle",
-                "http",
-                "laravel"
-            ],
-            "time": "2020-03-09T09:37:11+00:00"
         },
         {
             "name": "kub-at/php-simple-html-dom-parser",

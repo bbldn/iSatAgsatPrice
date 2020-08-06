@@ -15,7 +15,6 @@ $app->singleton(Illuminate\Contracts\Console\Kernel::class, App\Console\Kernel::
 
 $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);
-$app->register(Kozz\Laravel\Providers\Guzzle::class);
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
