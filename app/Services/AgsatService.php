@@ -61,12 +61,11 @@ class AgsatService extends Service
 
         $crawler = new Crawler($response->body());
         $crawler = $crawler->filter('#top_right_nav li .navbar-text .siteprof_currency')->first();
-
         if (0 === $crawler->count()) {
             return 0.0;
         }
 
-        $result = preg_match('/^1\$ = (.+?) грн /', $crawler->text(), $matches);
+        $result = preg_match('/^1\$ = (.+?) грн$/', $crawler->text(), $matches);
         if (0 === $result) {
             return 0.0;
         }
