@@ -3,10 +3,8 @@
 namespace App\Services;
 
 use App\Contexts\AgsatContext;
-use GuzzleHttp\Cookie\CookieJar;
-use GuzzleHttp\Cookie\SessionCookieJar;
-use GuzzleHttp\Psr7\Response;
-use Kozz\Laravel\Facades\Guzzle;
+use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Http;
 use KubAT\PhpSimple\HtmlDomParser;
 
 class Agsat extends Service
@@ -25,7 +23,7 @@ class Agsat extends Service
 
     /**
      * @param array $cookies
-     * @return false|string
+     * @return string
      */
     public function getAll(array $cookies = []): string
     {
@@ -33,17 +31,17 @@ class Agsat extends Service
             $cookies = $this->login();
         }
 
-        /** @noinspection PhpUndefinedMethodInspection */
-        /** @var Response $response */
-        $response = Guzzle::request('GET', 'https://www.agsat.com.ua/json/pricelist/', [
-            'headers' => [
-                'User-Agent' => $this->agsatContext->getUserAgent(),
-            ],
-            'cookies' => $cookies,
-            'allow_redirects' => false,
-        ]);
+        $response = Http::withCookies($cookies, 'www.agsat.com.ua')
+            ->withOptions(['allow_redirects' => false])
+            ->withHeaders(['User-Agent' => $this->agsatContext->getUserAgent()])
+            ->get('https://www.agsat.com.ua/json/pricelist/');
 
-        return json_encode((string)$response->getBody());
+        $json = json_encode($response->body());
+        if (false === $json) {
+            return '[]';
+        }
+
+        return $json;
     }
 
     /**
@@ -56,17 +54,12 @@ class Agsat extends Service
             $cookies = $this->login();
         }
 
-        /** @noinspection PhpUndefinedMethodInspection */
-        /** @var Response $response */
-        $response = Guzzle::request('GET', 'https://www.agsat.com.ua', [
-            'headers' => [
-                'User-Agent' => $this->agsatContext->getUserAgent(),
-            ],
-            'cookies' => $cookies,
-            'allow_redirects' => false,
-        ]);
+        $response = Http::withCookies($cookies, 'www.agsat.com.ua')
+            ->withOptions(['allow_redirects' => false])
+            ->withHeaders(['User-Agent' => $this->agsatContext->getUserAgent()])
+            ->get('https://www.agsat.com.ua');
 
-        $dom = HtmlDomParser::str_get_html((string)$response->getBody());
+        $dom = HtmlDomParser::str_get_html($response->body());
         $dollarRate = $dom->find('#top_right_nav li .navbar-text .siteprof_currency', 0)->text();
 
         preg_match('/^1\$ = (.+?) грн /', $dollarRate, $matches);
@@ -75,25 +68,19 @@ class Agsat extends Service
     }
 
     /**
-     * @return CookieJar
+     * @return array
      */
-    protected function login(): CookieJar
+    protected function login(): array
     {
-        /** @noinspection PhpUndefinedMethodInspection */
-        /** @var Response $response */
-        $response = Guzzle::request('POST', 'https://www.agsat.com.ua/login/', [
-            'form_params' => [
+        $response = Http::withOptions(['allow_redirects' => false])
+            ->withHeaders(['User-Agent' => $this->agsatContext->getUserAgent()])
+            ->asForm()
+            ->post('https://www.agsat.com.ua/login/', [
                 'login' => $this->agsatContext->getLogin(),
                 'password' => $this->agsatContext->getPassword(),
-            ],
-            'headers' => [
-                'User-Agent' => $this->agsatContext->getUserAgent(),
+            ]);
 
-            ],
-            'allow_redirects' => false,
-        ]);
-
-        return SessionCookieJar::fromArray($this->parseCookies($response), 'www.agsat.com.ua');
+        return $this->parseCookies($response);
     }
 
     /**
@@ -103,10 +90,12 @@ class Agsat extends Service
     protected function parseCookies(Response $response): array
     {
         $cookies = [];
+        $headers = $response->headers()['Set-Cookie'];
 
-        foreach ($response->getHeader('Set-Cookie') as $value) {
-            preg_match('/([^=]+)=([^;]+);/', $value, $matches);
-            $cookies[$matches[1]] = $matches[2];
+        foreach ($headers as $value) {
+            if (1 === preg_match('/^([^=]+)=([^;]+);/', $value, $matches)) {
+                $cookies[$matches[1]] = $matches[2];
+            }
         }
 
         return $cookies;
