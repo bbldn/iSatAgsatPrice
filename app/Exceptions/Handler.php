@@ -10,6 +10,7 @@ use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -24,21 +25,22 @@ class Handler extends ExceptionHandler
     ];
 
     /**
-     * @param  Exception $exception
+     * @param  Throwable $exception
      * @return void
-     * @throws Exception
+     * @throws Throwable
      */
-    public function report(Exception $exception)
+    public function report(Throwable $exception)
     {
         parent::report($exception);
     }
 
     /**
      * @param  Request $request
-     * @param  Exception $exception
+     * @param  Throwable $exception
      * @return Response
+     * @throws Throwable
      */
-    public function render($request, Exception $exception): Response
+    public function render($request, Throwable $exception): Response
     {
         return parent::render($request, $exception);
     }

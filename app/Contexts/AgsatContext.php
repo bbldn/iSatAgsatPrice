@@ -76,7 +76,7 @@ class AgsatContext
      * @param string $userAgent
      * @return AgsatContext
      */
-    public function setUserAgent(string $userAgent): AgsatContext
+    public function setUserAgent(string $userAgent): self
     {
         $this->userAgent = $userAgent;
 
