@@ -5,15 +5,15 @@ namespace App\Services;
 use App\Contexts\AgsatContext;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
-use KubAT\PhpSimple\HtmlDomParser;
+use Symfony\Component\DomCrawler\Crawler;
 
-class Agsat extends Service
+class AgsatService extends Service
 {
     /** @var AgsatContext $agsatContext */
     protected $agsatContext;
 
     /**
-     * Agsat constructor.
+     * AgsatService constructor.
      * @param AgsatContext $agsatContext
      */
     public function __construct(AgsatContext $agsatContext)
@@ -59,10 +59,17 @@ class Agsat extends Service
             ->withHeaders(['User-Agent' => $this->agsatContext->getUserAgent()])
             ->get('https://www.agsat.com.ua');
 
-        $dom = HtmlDomParser::str_get_html($response->body());
-        $dollarRate = $dom->find('#top_right_nav li .navbar-text .siteprof_currency', 0)->text();
+        $crawler = new Crawler($response->body());
+        $crawler = $crawler->filter('#top_right_nav li .navbar-text .siteprof_currency')->first();
 
-        preg_match('/^1\$ = (.+?) грн /', $dollarRate, $matches);
+        if (0 === $crawler->count()) {
+            return 0.0;
+        }
+
+        $result = preg_match('/^1\$ = (.+?) грн /', $crawler->text(), $matches);
+        if (0 === $result) {
+            return 0.0;
+        }
 
         return (float)$matches[1];
     }

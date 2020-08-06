@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Services\Agsat;
+use App\Services\AgsatService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 use League\Csv\CannotInsertRecord;
@@ -33,10 +33,10 @@ class AgsatCacheUpdateCommand extends Command
     ];
 
     /**
-     * @param Agsat $agsat
+     * @param AgsatService $agsat
      * @throws CannotInsertRecord
      */
-    public function handle(Agsat $agsat): void
+    public function handle(AgsatService $agsat): void
     {
         $rate = $agsat->getHryvniaRate();
         Cache::forever('DollarRate', $rate);

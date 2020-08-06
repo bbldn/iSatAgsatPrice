@@ -9,10 +9,11 @@
         "ext-json": "*",
         "ext-simplexml": "*",
         "guzzlehttp/guzzle": "^6.3",
-        "kub-at/php-simple-html-dom-parser": "^1.9",
         "laravel/lumen-framework": "^7.2.1",
         "league/csv": "^9.4",
-        "mlntn/lumen-artisan-serve": "^1.3"
+        "mlntn/lumen-artisan-serve": "^1.3",
+        "symfony/css-selector": "^5.1",
+        "symfony/dom-crawler": "^5.1"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.9.1",
