@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\CacheEnum;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Laravel\Lumen\Routing\Controller;
@@ -16,19 +17,23 @@ class ApiController extends Controller
     protected function validateData(?array $data): ?array
     {
         if (null === $data) {
-            return ['ok' => false, 'errors' => ['No data found, refresh cache']];
+            return [
+                'ok' => false,
+                'errors' => [
+                    'No data found, refresh cache',
+                ]
+            ];
         }
 
         return null;
     }
 
     /**
-     * @param string $format
      * @return Response
      */
-    public function categoriesSearchAction(string $format = 'json'): Response
+    public function categoriesSearchAction(): Response
     {
-        $data = Cache::get('JSONCategories');
+        $data = Cache::get(CacheEnum::JSONCategories);
 
         return response($data)->header('Content-Type', 'application/json');
     }
@@ -39,18 +44,18 @@ class ApiController extends Controller
      */
     public function productsSearchAction(Request $request): Response
     {
-        $data = Cache::get('JSONProducts', null);
+        $data = Cache::get(CacheEnum::JSONProducts, null);
         $data = json_decode($data, true);
 
         if (false === $data) {
-            return response()->json($this->validateData(null));
+            return response()->json($this->validateData($data));
         }
 
         if (2 === (int)$request->get('currency', 1)) {
-            $dollarRate = Cache::get('DollarRate');
+            $GRNRate = Cache::get(CacheEnum::GRNRate);
             foreach ($data as &$item) {
                 foreach ($item['prices'] as &$value) {
-                    $value['price'] /= $dollarRate;
+                    $value['price'] /= $GRNRate;
                 }
             }
         }
@@ -63,7 +68,7 @@ class ApiController extends Controller
      */
     public function contactCategoriesSearchAction(): Response
     {
-        $data = Cache::get('JSONContactCategories');
+        $data = Cache::get(CacheEnum::JSONContactCategories);
 
         return response($data)->header('Content-Type', 'application/json');
     }
@@ -71,8 +76,8 @@ class ApiController extends Controller
     /**
      * @return Response
      */
-    public function getDollarRateAction(): Response
+    public function getGRNRateAction(): Response
     {
-        return response()->json(['rate' => Cache::get('DollarRate', 40)]);
+        return response()->json(['rate' => Cache::get(CacheEnum::GRNRate, 40)]);
     }
 }

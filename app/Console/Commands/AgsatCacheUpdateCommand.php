@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Helpers\CacheEnum;
 use App\Services\AgsatService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
@@ -19,19 +20,25 @@ class AgsatCacheUpdateCommand extends Command
      */
     public function handle(AgsatService $agsat): void
     {
-        $rate = $agsat->getHryvniaRate();
-        Cache::forever('DollarRate', $rate);
+        $rate = $agsat->getGRNRate();
+        Cache::forever(CacheEnum::GRNRate, $rate);
 
-        $arr = json_decode(json_decode($agsat->getAll(), true), true);
+        $data = json_decode($agsat->getAll(), true);
+        $data = json_decode($data, true);
 
-        if ('ok' !== $arr['status']) {
+        if ('ok' !== $data['status']) {
             $this->info('error');
 
             return;
         }
 
-        $arr = $arr['data'];
-        foreach ($arr['products'] as &$product) {
+        $data = $data['data'];
+        Cache::forever(CacheEnum::JSONAll, json_encode($data));
+        Cache::forever(CacheEnum::JSONProducts, json_encode($data['products']));
+        Cache::forever(CacheEnum::JSONCategories, json_encode($data['categories']));
+        Cache::forever(CacheEnum::JSONContactCategories, json_encode($data['contact_categories']));
+
+        foreach ($data['products'] as &$product) {
             foreach ($product['prices'] as &$price) {
                 if (1 !== $price['category_id']) {
                     $price['price'] *= $rate;
@@ -39,10 +46,8 @@ class AgsatCacheUpdateCommand extends Command
             }
         }
 
-        Cache::forever('JSONAll', json_encode($arr));
-        Cache::forever('JSONProducts', json_encode($arr['products']));
-        Cache::forever('JSONCategories', json_encode($arr['categories']));
-        Cache::forever('JSONContactCategories', json_encode($arr['contact_categories']));
+
+        Cache::forever(CacheEnum::JSONProductsGRN, json_encode($data['products']));
 
         $this->info('ok');
     }

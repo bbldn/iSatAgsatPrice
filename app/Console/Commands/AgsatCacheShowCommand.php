@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Helpers\CacheEnum;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 
@@ -18,6 +19,6 @@ class AgsatCacheShowCommand extends Command
      */
     public function handle(): void
     {
-        $this->output->text(Cache::get('JSONProducts', '[]'));
+        $this->output->text(Cache::get(CacheEnum::JSONProducts, json_encode([])));
     }
 }

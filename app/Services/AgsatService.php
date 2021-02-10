@@ -48,7 +48,7 @@ class AgsatService
      * @param array $cookies
      * @return mixed
      */
-    public function getHryvniaRate(array $cookies = []): float
+    public function getGRNRate(array $cookies = []): float
     {
         if (0 === count($cookies)) {
             $cookies = $this->login();

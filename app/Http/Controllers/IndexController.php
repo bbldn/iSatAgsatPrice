@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\CacheEnum;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
@@ -14,20 +15,12 @@ class IndexController extends Controller
      */
     protected function getProducts(): array
     {
-        $products = json_decode(Cache::get('JSONProducts'), true);
+        $products = json_decode(Cache::get(CacheEnum::JSONProducts), true);
         if (false === $products) {
             return [];
         }
 
         return $products;
-    }
-
-    /**
-     * @return float|null
-     */
-    protected function getDollarRate(): ?float
-    {
-        return Cache::get('DollarRate');
     }
 
     /**
@@ -47,7 +40,7 @@ class IndexController extends Controller
 
         $data = [
             'products' => $products,
-            'rate' => $this->getDollarRate(),
+            'rate' => Cache::get(CacheEnum::GRNRate),
         ];
 
         return view('search', $data);
@@ -59,7 +52,7 @@ class IndexController extends Controller
     public function indexAction(): View
     {
         $data = [
-            'rate' => $this->getDollarRate(),
+            'rate' => Cache::get(CacheEnum::GRNRate),
         ];
 
         return view('index', $data);
