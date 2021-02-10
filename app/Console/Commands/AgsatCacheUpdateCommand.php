@@ -20,7 +20,7 @@ class AgsatCacheUpdateCommand extends Command
      */
     public function handle(AgsatService $agsat): void
     {
-        $rate = $agsat->getGRNRate();
+        $rate = (float)$agsat->getGRNRate();
         Cache::forever(CacheEnum::GRNRate, $rate);
 
         $data = json_decode($agsat->getAll(), true);
@@ -38,16 +38,22 @@ class AgsatCacheUpdateCommand extends Command
         Cache::forever(CacheEnum::JSONCategories, json_encode($data['categories']));
         Cache::forever(CacheEnum::JSONContactCategories, json_encode($data['contact_categories']));
 
-        foreach ($data['products'] as &$product) {
-            foreach ($product['prices'] as &$price) {
+        $products = [];
+        foreach ($data['products'] as $product) {
+            $prices = [];
+            foreach ($product['prices'] as $price) {
                 if (1 !== $price['category_id']) {
                     $price['price'] *= $rate;
                 }
+
+                $prices[] = $price;
             }
+            $product['prices'] = $prices;
+            $products[] = $product;
         }
 
 
-        Cache::forever(CacheEnum::JSONProductsGRN, json_encode($data['products']));
+        Cache::forever(CacheEnum::JSONProductsGRN, json_encode($products));
 
         $this->info('ok');
     }
