@@ -45,8 +45,8 @@ class ApiController extends Controller
     public function productsSearchAction(Request $request): Response
     {
         /**
-         * Dollar - 2
          * GRN - 1
+         * Dollar - 2
          */
         $currencyId = (int)$request->get('currency', 1);
         $key = 1 === $currencyId ? CacheEnum::JSONProductsGRN : CacheEnum::JSONProducts;
