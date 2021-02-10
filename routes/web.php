@@ -6,8 +6,16 @@ $router->get('/', 'IndexController@indexAction');
 $router->get('search', 'IndexController@searchAction');
 $router->get('update', 'IndexController@updateIndexAction');
 
+/** Old Api */
 $router->get('api/update', 'UpdateController@updateAction');
 $router->get('api/products/get', 'ApiController@productsSearchAction');
 $router->get('api/get_dollar_currency', 'ApiController@getGRNRateAction');
 $router->get('api/categories/get', 'ApiController@categoriesSearchAction');
 $router->get('api/contact_categories/get', 'ApiController@contactCategoriesSearchAction');
+/** End Old Api */
+
+/** New Api */
+$router->get('api/v2/products/get', 'NewApiController@productsAction');
+$router->get('api/v2/categories/get', 'NewApiController@categoriesAction');
+$router->get('api/v2/customer-groups/get', 'NewApiController@customerGroupsAction');
+/** End New Api */

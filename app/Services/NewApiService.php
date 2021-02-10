@@ -11,8 +11,7 @@ class NewApiService
     private function convertCustomerGroup(array $customerGroups): array
     {
         $data = [
-            'id' => 1,
-            'name' => 'Розница',
+            ['id' => 1, 'name' => 'Розница'],
         ];
 
         foreach ($customerGroups as $customerGroup) {
