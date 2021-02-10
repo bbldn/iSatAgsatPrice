@@ -7,11 +7,11 @@ use Illuminate\Support\Facades\Cache;
 
 class AgsatCacheShowCommand extends Command
 {
-    /** @var string $signature */
-    protected $signature = 'agsat:cache:show';
-
-    /** @var string $description */
+    /** @var string */
     protected $description = 'Show cache';
+
+    /** @var string */
+    protected $signature = 'agsat:cache:show';
 
     /**
      *

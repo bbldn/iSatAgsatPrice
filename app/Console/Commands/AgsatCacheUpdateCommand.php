@@ -10,25 +10,25 @@ use League\Csv\Writer;
 
 class AgsatCacheUpdateCommand extends Command
 {
-    /** @var string $signature */
-    protected $signature = 'agsat:cache:update';
-
-    /** @var string $description */
+    /** @var string */
     protected $description = 'Update cache';
 
-    /** @var array $headers */
-    protected $headers = [
+    /** @var string */
+    protected $signature = 'agsat:cache:update';
+
+    /** @var array */
+    private $headers = [
         'products' => [
             'id', 'name', 'url',
             'sku', 'sku_id', 'category_id',
             'price_in_usd', 'category_id - roznica',
-            'category_id - diler', 'category_id - opt', 'category_id - partner'
+            'category_id - diler', 'category_id - opt', 'category_id - partner',
         ],
         'categories' => [
-            'id', 'name', 'parent_id', 'url'
+            'id', 'name', 'parent_id', 'url',
         ],
         'contact_categories' => [
-            'id', 'name'
+            'id', 'name',
         ],
     ];
 
@@ -58,30 +58,12 @@ class AgsatCacheUpdateCommand extends Command
             }
         }
 
-        Cache::forever(
-            'JSONAll',
-            json_encode($arr)
-        );
-        Cache::forever(
-            'JSONProducts',
-            json_encode($arr['products'])
-        );
-        Cache::forever(
-            'JSONCategories',
-            json_encode($arr['categories'])
-        );
-        Cache::forever(
-            'JSONContactCategories',
-            json_encode($arr['contact_categories'])
-        );
-        Cache::forever(
-            'CSVProducts',
-            $this->productsToCSV($arr['products'], $this->headers['products'])
-        );
-        Cache::forever(
-            'CSVCategories',
-            $this->categoriesToCSV($arr['categories'], $this->headers['categories'])
-        );
+        Cache::forever('JSONAll', json_encode($arr));
+        Cache::forever('JSONProducts', json_encode($arr['products']));
+        Cache::forever('JSONCategories', json_encode($arr['categories']));
+        Cache::forever('JSONContactCategories', json_encode($arr['contact_categories']));
+        Cache::forever('CSVProducts', $this->productsToCSV($arr['products'], $this->headers['products']));
+        Cache::forever('CSVCategories', $this->categoriesToCSV($arr['categories'], $this->headers['categories']));
         Cache::forever(
             'CSVContactCategories',
             $this->contactCategoriesToCSV($arr['contact_categories'], $this->headers['contact_categories'])
@@ -96,7 +78,7 @@ class AgsatCacheUpdateCommand extends Command
      * @return string
      * @throws CannotInsertRecord
      */
-    protected function productsToCSV(array $data, ?array $header = null): string
+    private function productsToCSV(array $data, ?array $header = null): string
     {
         $productsCSV = [];
         foreach ($data as $product) {
@@ -127,7 +109,7 @@ class AgsatCacheUpdateCommand extends Command
      * @return string
      * @throws CannotInsertRecord
      */
-    protected function categoriesToCSV(array $data, ?array $header = null): string
+    private function categoriesToCSV(array $data, ?array $header = null): string
     {
         $categoriesCSV = [];
         foreach ($data as $category) {
@@ -147,7 +129,7 @@ class AgsatCacheUpdateCommand extends Command
      * @return string
      * @throws CannotInsertRecord
      */
-    protected function contactCategoriesToCSV(array $data, ?array $header = null): string
+    private function contactCategoriesToCSV(array $data, ?array $header = null): string
     {
         $contactCategoriesCSV = [];
         foreach ($data as $contactCategory) {
@@ -167,7 +149,7 @@ class AgsatCacheUpdateCommand extends Command
      * @return string
      * @throws CannotInsertRecord
      */
-    protected function toCSV(array $data, ?array $header = null): string
+    private function toCSV(array $data, ?array $header = null): string
     {
         $csv = Writer::createFromString();
 

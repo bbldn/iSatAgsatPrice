@@ -7,7 +7,7 @@ use Laravel\Lumen\Console\Kernel as ConsoleKernel;
 class Kernel extends ConsoleKernel
 {
     /**
-     * @var string[] $commands
+     * @var string[]
      */
     protected $commands = [
         \App\Console\Commands\AgsatCacheUpdateCommand::class,

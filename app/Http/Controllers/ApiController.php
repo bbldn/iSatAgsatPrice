@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Laravel\Lumen\Routing\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 class ApiController extends Controller
 {
-    /** @var string[] $supportedFormats */
-    protected $supportedFormats = [
+    /** @var string[] */
+    private $supportedFormats = [
         'json',
         'csv',
     ];

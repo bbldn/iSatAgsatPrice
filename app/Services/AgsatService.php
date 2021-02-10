@@ -7,10 +7,10 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\DomCrawler\Crawler;
 
-class AgsatService extends Service
+class AgsatService
 {
-    /** @var AgsatContext $agsatContext */
-    protected $agsatContext;
+    /** @var AgsatContext */
+    private $agsatContext;
 
     /**
      * AgsatService constructor.

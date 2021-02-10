@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Console\Commands\AgsatCacheUpdateCommand;
 use Illuminate\Support\Facades\Artisan;
 use Symfony\Component\HttpFoundation\Response;
+use Laravel\Lumen\Routing\Controller;
 
 class UpdateController extends Controller
 {

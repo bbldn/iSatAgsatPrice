@@ -2,7 +2,6 @@
 
 namespace App\Exceptions;
 
-use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -15,7 +14,7 @@ use Throwable;
 class Handler extends ExceptionHandler
 {
     /**
-     * @var string[] $dontReport
+     * @var string[]
      */
     protected $dontReport = [
         AuthorizationException::class,
@@ -25,7 +24,7 @@ class Handler extends ExceptionHandler
     ];
 
     /**
-     * @param  Throwable $exception
+     * @param Throwable $exception
      * @return void
      * @throws Throwable
      */
@@ -35,8 +34,8 @@ class Handler extends ExceptionHandler
     }
 
     /**
-     * @param  Request $request
-     * @param  Throwable $exception
+     * @param Request $request
+     * @param Throwable $exception
      * @return Response
      * @throws Throwable
      */
