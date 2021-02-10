@@ -1,6 +1,11 @@
+###> laravel/framework-bundle ###
 /vendor
-/.idea
 Homestead.json
 Homestead.yaml
 .env
 .phpunit.result.cache
+###< laravel/framework-bundle ###
+###> ide ###
+/.idea
+/*.code-workspace
+###< ide ###

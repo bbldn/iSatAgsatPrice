@@ -21,7 +21,7 @@ class ApiController extends Controller
                 'ok' => false,
                 'errors' => [
                     'No data found, refresh cache',
-                ]
+                ],
             ];
         }
 
@@ -44,20 +44,18 @@ class ApiController extends Controller
      */
     public function productsSearchAction(Request $request): Response
     {
-        $data = Cache::get(CacheEnum::JSONProducts, null);
+        /**
+         * Dollar - 2
+         * GRN - 1
+         */
+        $currencyId = (int)$request->get('currency', 1);
+        $key = 1 === $currencyId ? CacheEnum::JSONProductsGRN : CacheEnum::JSONProducts;
+
+        $data = Cache::get($key, null);
         $data = json_decode($data, true);
 
         if (false === $data) {
             return response()->json($this->validateData($data));
-        }
-
-        if (2 === (int)$request->get('currency', 1)) {
-            $GRNRate = Cache::get(CacheEnum::GRNRate);
-            foreach ($data as &$item) {
-                foreach ($item['prices'] as &$value) {
-                    $value['price'] /= $GRNRate;
-                }
-            }
         }
 
         return response($data)->header('Content-Type', 'application/json');

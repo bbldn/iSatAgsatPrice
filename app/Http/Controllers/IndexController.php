@@ -15,7 +15,7 @@ class IndexController extends Controller
      */
     protected function getProducts(): array
     {
-        $products = json_decode(Cache::get(CacheEnum::JSONProducts), true);
+        $products = json_decode(Cache::get(CacheEnum::JSONProductsGRN), true);
         if (false === $products) {
             return [];
         }
