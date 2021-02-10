@@ -19,6 +19,6 @@ class AgsatCacheShowCommand extends Command
      */
     public function handle(): void
     {
-        $this->output->text(Cache::get(CacheEnum::JSONProducts, json_encode([])));
+        $this->output->text(Cache::get(CacheEnum::Products, json_encode([])));
     }
 }

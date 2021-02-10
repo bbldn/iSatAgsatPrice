@@ -6,13 +6,21 @@ class CacheEnum
 {
     public const GRNRate = 'GRNRate';
 
-    public const JSONAll = 'JSONAll';
+    public const All = 'All';
 
-    public const JSONProducts = 'JSONProducts';
+    public const Products = 'Products';
 
-    public const JSONCategories = 'JSONCategories';
+    public const Categories = 'Categories';
 
-    public const JSONProductsGRN = 'JSONProductsGRN';
+    public const ProductsGRN = 'ProductsGRN';
 
-    public const JSONContactCategories = 'JSONContactCategories';
+    public const ContactCategories = 'JSONContactCategories';
+
+    public const AllV2 = 'AllV2';
+
+    public const ProductsV2 = 'ProductsV2';
+
+    public const CategoriesV2 = 'CategoriesV2';
+
+    public const CustomerGroupsV2 = 'CustomerGroupsV2';
 }

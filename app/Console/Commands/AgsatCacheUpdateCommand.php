@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Helpers\CacheEnum;
 use App\Services\AgsatService;
+use App\Services\NewApiService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 
@@ -65,8 +66,9 @@ class AgsatCacheUpdateCommand extends Command
 
     /**
      * @param AgsatService $agsat
+     * @param NewApiService $newApiService
      */
-    public function handle(AgsatService $agsat): void
+    public function handle(AgsatService $agsat, NewApiService $newApiService): void
     {
         $rate = (float)$agsat->getGRNRate();
         Cache::forever(CacheEnum::GRNRate, $rate);
@@ -81,15 +83,23 @@ class AgsatCacheUpdateCommand extends Command
         }
 
         $data = $data['data'];
-        Cache::forever(CacheEnum::JSONAll, json_encode($data));
-        Cache::forever(CacheEnum::JSONCategories, json_encode($data['categories']));
-        Cache::forever(CacheEnum::JSONContactCategories, json_encode($data['contact_categories']));
+        Cache::forever(CacheEnum::All, json_encode($data));
+        Cache::forever(CacheEnum::Categories, json_encode($data['categories']));
+        Cache::forever(CacheEnum::ContactCategories, json_encode($data['contact_categories']));
 
         $products = $this->convertToDollar($data['products'], $rate);
-        Cache::forever(CacheEnum::JSONProducts, json_encode($products));
+        Cache::forever(CacheEnum::Products, json_encode($products));
 
         $products = $this->convertToGRN($data['products'], $rate);
-        Cache::forever(CacheEnum::JSONProductsGRN, json_encode($products));
+        Cache::forever(CacheEnum::ProductsGRN, json_encode($products));
+
+        /** For New Api */
+        $data = $newApiService->convertToNewApiFormat($data, $rate);
+        Cache::forever(CacheEnum::AllV2, json_encode($data));
+        Cache::forever(CacheEnum::ProductsV2, json_encode($data['products']));
+        Cache::forever(CacheEnum::CategoriesV2, json_encode($data['categories']));
+        Cache::forever(CacheEnum::CustomerGroupsV2, json_encode($data['customerGroups']));
+        /** End For New Api */
 
         $this->info('ok');
     }

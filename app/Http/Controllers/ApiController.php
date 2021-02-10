@@ -33,7 +33,7 @@ class ApiController extends Controller
      */
     public function categoriesSearchAction(): Response
     {
-        $data = Cache::get(CacheEnum::JSONCategories);
+        $data = Cache::get(CacheEnum::Categories);
 
         return response($data)->header('Content-Type', 'application/json');
     }
@@ -49,7 +49,7 @@ class ApiController extends Controller
          * Dollar - 2
          */
         $currencyId = (int)$request->get('currency', 1);
-        $key = 1 === $currencyId ? CacheEnum::JSONProductsGRN : CacheEnum::JSONProducts;
+        $key = 1 === $currencyId ? CacheEnum::ProductsGRN : CacheEnum::Products;
 
         $data = Cache::get($key, null);
         $data = json_decode($data, true);
@@ -66,7 +66,7 @@ class ApiController extends Controller
      */
     public function contactCategoriesSearchAction(): Response
     {
-        $data = Cache::get(CacheEnum::JSONContactCategories);
+        $data = Cache::get(CacheEnum::ContactCategories);
 
         return response($data)->header('Content-Type', 'application/json');
     }
