@@ -1,7 +1,7 @@
-<html>
+<html lang="ru">
 
 <head>
-
+    <title>Agsat Parser</title>
 </head>
 
 <style>
@@ -15,22 +15,29 @@
     }
 
     #query {
-        width: 90%;
+        width: 88%;
     }
 </style>
 
 <body>
 <div class="top-content">
-    <input type="text" id="query">
+    <label>
+        <input type="text" id="query">
+    </label>
+
     <button id="searchButton">Найти</button>
+    <select id="currencySelect">
+        <option value="1" @if (1 === $currencyId)selected="selected"@endif>грн</option>
+        <option value="2" @if (2 === $currencyId)selected="selected"@endif>$</option>
+    </select>
     <b>Курс:</b>
-    <span>{{$rate}}</span>
+    <span>{{ $rate }}</span>
 </div>
 
 <button id="refreshButton">Обновить кеш</button>
 
 <div>
-    <iframe src="/search" id="iframe">Hello</iframe>
+    <iframe src="/search?currency_id={{ $currencyId }}" id="iframe">Hello</iframe>
 </div>
 
 </body>
@@ -39,16 +46,18 @@
     const bootTime = new Date().getTime();
     const input = document.getElementById('query');
     const iFrame = document.getElementById('iframe');
+    const currencySelect = document.getElementById('currencySelect');
     let updateEnable = false;
 
     const searchAction = () => {
         let value = input.value.trim();
+
         if (value.length === 0) {
-            iFrame.src = `/search`;
+            iFrame.src = `/search?currency_id=${currencySelect.value}`;
             return;
         }
 
-        iFrame.src = `/search?q=${value}`;
+        iFrame.src = `/search?q=${value}&currency_id=${currencySelect.value}`;
     };
 
     const refresh = (bootTime) => {
@@ -84,17 +93,21 @@
         target.innerHTML = 'Не перезагружайте/не закрывайте страницу пока кнопка не станет серой';
         target.style.backgroundColor = 'red';
 
-        let xHTTP = new XMLHttpRequest();
-        xHTTP.onreadystatechange = function () {
+        let request = new XMLHttpRequest();
+        request.onreadystatechange = function () {
             if (this.status === 200) {
                 target.innerHTML = defaultText;
                 target.style.backgroundColor = defaultColor;
-                window.location.reload(true);
+                window.location.reload();
                 updateEnable = false;
             }
         };
-        xHTTP.open('GET', '/api/update', true);
-        xHTTP.send();
+        request.open('GET', '/api/update', true);
+        request.send();
+    });
+
+    currencySelect.addEventListener("change", () => {
+        window.location = `/?currency_id=${currencySelect.value}`;
     });
 
 </script>

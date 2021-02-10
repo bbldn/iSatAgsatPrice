@@ -11,11 +11,13 @@ use Laravel\Lumen\Routing\Controller;
 class IndexController extends Controller
 {
     /**
+     * @param int|null $currencyId
      * @return array
      */
-    protected function getProducts(): array
+    protected function getProducts(?int $currencyId = 1): array
     {
-        $products = json_decode(Cache::get(CacheEnum::ProductsGRN), true);
+        $key = 2 === $currencyId ? CacheEnum::Products : CacheEnum::ProductsGRN;
+        $products = json_decode(Cache::get($key), true);
         if (false === $products) {
             return [];
         }
@@ -29,7 +31,8 @@ class IndexController extends Controller
      */
     public function searchAction(Request $request): View
     {
-        $products = $this->getProducts();
+        $currencyId = $request->get('currency_id', 1);
+        $products = $this->getProducts($currencyId);
         if (true === $request->has('q')) {
             $query = $request->get('q');
 
@@ -47,11 +50,14 @@ class IndexController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return View
      */
-    public function indexAction(): View
+    public function indexAction(Request $request): View
     {
+        $currencyId = (int)$request->get('currency_id', 1);
         $data = [
+            'currencyId' => $currencyId,
             'rate' => Cache::get(CacheEnum::GRNRate),
         ];
 

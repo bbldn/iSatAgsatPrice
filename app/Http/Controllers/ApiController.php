@@ -31,7 +31,7 @@ class ApiController extends Controller
     /**
      * @return Response
      */
-    public function categoriesSearchAction(): Response
+    public function categoriesAction(): Response
     {
         $data = Cache::get(CacheEnum::Categories);
 
@@ -42,7 +42,7 @@ class ApiController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function productsSearchAction(Request $request): Response
+    public function productsAction(Request $request): Response
     {
         /**
          * GRN - 1
@@ -64,7 +64,7 @@ class ApiController extends Controller
     /**
      * @return Response
      */
-    public function contactCategoriesSearchAction(): Response
+    public function contactCategoriesAction(): Response
     {
         $data = Cache::get(CacheEnum::ContactCategories);
 
@@ -74,7 +74,7 @@ class ApiController extends Controller
     /**
      * @return Response
      */
-    public function getGRNRateAction(): Response
+    public function rateAction(): Response
     {
         return response()->json(['rate' => Cache::get(CacheEnum::GRNRate, 40)]);
     }

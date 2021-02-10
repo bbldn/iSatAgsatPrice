@@ -8,10 +8,10 @@ $router->get('update', 'IndexController@updateIndexAction');
 
 /** Old Api */
 $router->get('api/update', 'UpdateController@updateAction');
-$router->get('api/products/get', 'ApiController@productsSearchAction');
-$router->get('api/get_dollar_currency', 'ApiController@getGRNRateAction');
-$router->get('api/categories/get', 'ApiController@categoriesSearchAction');
-$router->get('api/contact_categories/get', 'ApiController@contactCategoriesSearchAction');
+$router->get('api/products/get', 'ApiController@productsAction');
+$router->get('api/get_dollar_currency', 'ApiController@rateAction');
+$router->get('api/categories/get', 'ApiController@categoriesAction');
+$router->get('api/contact_categories/get', 'ApiController@contactCategoriesAction');
 /** End Old Api */
 
 /** New Api */
