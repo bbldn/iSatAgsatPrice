@@ -109,7 +109,6 @@
     currencySelect.addEventListener("change", () => {
         window.location = `/?currency_id=${currencySelect.value}`;
     });
-
 </script>
 
 </html>

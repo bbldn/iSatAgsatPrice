@@ -6,7 +6,10 @@ class NewApiService
 {
     /**
      * @param array $customerGroups
-     * @return array
+     * @return array<array{
+     *     id: int,
+     *     name: string
+     * }>
      */
     private function convertCustomerGroup(array $customerGroups): array
     {
@@ -26,7 +29,12 @@ class NewApiService
 
     /**
      * @param array $categories
-     * @return array
+     * @return array<array{
+     *     id: int,
+     *     url: string,
+     *     name: string,
+     *     parent_id: int,
+     * }>
      */
     private function convertCategories(array $categories): array
     {
@@ -43,6 +51,22 @@ class NewApiService
         return $data;
     }
 
+    /**
+     * @param array $products
+     * @param float $rate
+     * @return array<array{
+     *     id: int,
+     *     sku: int,
+     *     url: string,
+     *     shu_id: int,
+     *     name: string,
+     *     category_id: int,
+     *     prices: array<array{
+     *         price: int,
+     *         customer_group_id: int,
+     *     }>
+     * }>
+     */
     private function convertProducts(array $products, float $rate): array
     {
         $result = [];
@@ -66,7 +90,7 @@ class NewApiService
                 'sku' => (int)$product['sku'],
                 'url' => $product['frontend_url'],
                 'sku_id' => (int)$product['sku_id'],
-                'category_id' => $product['category_id'],
+                'category_id' => (int)$product['category_id'],
             ];
         }
 
@@ -76,7 +100,31 @@ class NewApiService
     /**
      * @param array $data
      * @param float $rate
-     * @return array
+     * @return array{
+     *      rate: float,
+     *      categories: array<array{
+     *          id: int,
+     *          url: string,
+     *          name: string,
+     *          parent_id: int,
+     *      }>,
+     *      products: array<array{
+     *          id: int,
+     *          sku: int,
+     *          url: string,
+     *          shu_id: int,
+     *          name: string,
+     *          category_id: int,
+     *          prices: array<array{
+     *              price: int,
+     *              customer_group_id: int,
+     *          }>
+     *      }>,
+     *      customerGroups: array<array{
+     *          id: int,
+     *          name: string
+     *      }>,
+     * }
      */
     public function convertToNewApiFormat(array $data, float $rate): array
     {

@@ -19,7 +19,11 @@ class AgsatContext
      * @param string $password
      * @param string $userAgent
      */
-    public function __construct(string $login, string $password, string $userAgent)
+    public function __construct(
+        string $login,
+        string $password,
+        string $userAgent
+    )
     {
         $this->login = $login;
         $this->password = $password;

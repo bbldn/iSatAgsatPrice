@@ -76,6 +76,8 @@ class ApiController extends Controller
      */
     public function rateAction(): Response
     {
-        return response()->json(['rate' => Cache::get(CacheEnum::GRNRate, 40)]);
+        $data = json_encode(['rate' => Cache::get(CacheEnum::GRNRate, 40)]);
+
+        return response($data)->header('Content-Type', 'application/json');
     }
 }

@@ -14,7 +14,6 @@ $app->singleton(Illuminate\Contracts\Debug\ExceptionHandler::class, App\Exceptio
 $app->singleton(Illuminate\Contracts\Console\Kernel::class, App\Console\Kernel::class);
 
 $app->register(App\Providers\AppServiceProvider::class);
-$app->register(App\Providers\EventServiceProvider::class);
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',

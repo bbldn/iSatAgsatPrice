@@ -24,7 +24,7 @@ class NewApiController extends Controller
      */
     public function productsAction(): Response
     {
-        $data = Cache::get(CacheEnum::ProductsV2, null);
+        $data = Cache::get(CacheEnum::ProductsV2);
         $data = json_decode($data, true);
 
         return response($data)->header('Content-Type', 'application/json');

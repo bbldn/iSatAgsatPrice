@@ -38,7 +38,7 @@ class AgsatService
 
         $json = json_encode($response->body());
         if (false === $json) {
-            return '[]';
+            return json_encode([]);
         }
 
         return $json;
@@ -46,7 +46,7 @@ class AgsatService
 
     /**
      * @param array $cookies
-     * @return mixed
+     * @return float
      */
     public function getGRNRate(array $cookies = []): float
     {
@@ -74,7 +74,7 @@ class AgsatService
     }
 
     /**
-     * @return array
+     * @return array<string, string>
      */
     protected function login(): array
     {
@@ -91,7 +91,7 @@ class AgsatService
 
     /**
      * @param Response $response
-     * @return array
+     * @return array<string, string>
      */
     protected function parseCookies(Response $response): array
     {

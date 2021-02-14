@@ -55,10 +55,9 @@ class IndexController extends Controller
      */
     public function indexAction(Request $request): View
     {
-        $currencyId = (int)$request->get('currency_id', 1);
         $data = [
-            'currencyId' => $currencyId,
             'rate' => Cache::get(CacheEnum::GRNRate),
+            'currencyId' => (int)$request->get('currency_id', 1),
         ];
 
         return view('index', $data);
