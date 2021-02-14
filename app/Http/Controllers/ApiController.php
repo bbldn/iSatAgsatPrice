@@ -12,7 +12,10 @@ class ApiController extends Controller
 {
     /**
      * @param array|null $data
-     * @return array|null
+     * @return null|array{
+     *     ok: boolean,
+     *     errors: array<string>,
+     * }
      */
     protected function validateData(?array $data): ?array
     {

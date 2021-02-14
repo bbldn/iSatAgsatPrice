@@ -8,6 +8,7 @@ class Kernel extends ConsoleKernel
 {
     /**
      * @var string[]
+     * @psalm-var class-string[]
      */
     protected $commands = [
         \App\Console\Commands\AgsatCacheUpdateCommand::class,
