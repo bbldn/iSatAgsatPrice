@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Console\Commands\AgsatCacheUpdateCommand;
 use Illuminate\Support\Facades\Artisan;
-use Symfony\Component\HttpFoundation\Response;
 use Laravel\Lumen\Routing\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 class UpdateController extends Controller
 {
@@ -14,10 +14,12 @@ class UpdateController extends Controller
      */
     public function updateAction(): Response
     {
+        Artisan::call(AgsatCacheUpdateCommand::class);
+
         $data = [
             'ok' => true,
             'data' => [
-                'status' => Artisan::call(AgsatCacheUpdateCommand::class),
+                'status' => trim(Artisan::output()),
             ],
         ];
 
