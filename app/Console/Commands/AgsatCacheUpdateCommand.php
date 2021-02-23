@@ -28,7 +28,7 @@ class AgsatCacheUpdateCommand extends Command
             $prices = [];
             foreach ($product['prices'] as $price) {
                 if (1 === $price['category_id']) {
-                    $price['price'] = round($price['price'] / $rate, 2);
+                    $price['price'] = $price['price'] / $rate;
                 }
 
                 $prices[] = $price;
