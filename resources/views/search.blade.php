@@ -23,7 +23,7 @@
             </td>
             @foreach ($product['prices'] as $key => $price)
                 @if ($key != 3)
-                    <td>{{$price['price']}}</td>
+                    <td>{{round($price['price'], 2)}}</td>
                 @endif
             @endforeach
         </tr>
