@@ -101,29 +101,29 @@ class NewApiService
      * @param array $data
      * @param float $rate
      * @return array{
-     *      rate: float,
-     *      categories: array<array{
-     *          id: int,
-     *          url: string,
-     *          name: string,
-     *          parent_id: int,
-     *      }>,
-     *      products: array<array{
-     *          id: int,
-     *          sku: int,
-     *          url: string,
-     *          shu_id: int,
-     *          name: string,
-     *          category_id: int,
-     *          prices: array<array{
-     *              price: int,
-     *              customer_group_id: int,
-     *          }>
-     *      }>,
-     *      customerGroups: array<array{
-     *          id: int,
-     *          name: string
-     *      }>,
+     *     rate: float,
+     *     categories: array<array{
+     *         id: int,
+     *         url: string,
+     *         name: string,
+     *         parent_id: int,
+     *     }>,
+     *     products: array<array{
+     *         id: int,
+     *         sku: int,
+     *         url: string,
+     *         shu_id: int,
+     *         name: string,
+     *         category_id: int,
+     *         prices: array<array{
+     *             price: int,
+     *             customer_group_id: int,
+     *         }>
+     *     }>,
+     *     customerGroups: array<array{
+     *         id: int,
+     *         name: string
+     *     }>,
      * }
      */
     public function convertToNewApiFormat(array $data, float $rate): array

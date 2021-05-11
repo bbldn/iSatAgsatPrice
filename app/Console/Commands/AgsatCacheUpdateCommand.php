@@ -68,10 +68,7 @@ class AgsatCacheUpdateCommand extends Command
      * @param AgsatService $agsat
      * @param NewApiService $newApiService
      */
-    public function handle(
-        AgsatService $agsat,
-        NewApiService $newApiService
-    ): void
+    public function handle(AgsatService $agsat, NewApiService $newApiService): void
     {
         $rate = $agsat->getGRNRate();
         Cache::forever(CacheEnum::GRNRate, $rate);

@@ -15,8 +15,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(AgsatContext::class, function () {
             $login = env('ALOGIN');
             $password = env('APASSWORD');
-            $userAgent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 ' .
-                '(KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36';
+            $userAgent = <<<TEXT
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36
+TEXT;
 
             return new AgsatContext($login, $password, $userAgent);
         });
