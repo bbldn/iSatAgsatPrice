@@ -1,7 +1,9 @@
-<html>
+<html lang="ru">
 
 <head>
+    <title>
 
+    </title>
 </head>
 
 <style>
