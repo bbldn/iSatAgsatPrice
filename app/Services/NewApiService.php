@@ -69,17 +69,21 @@ class NewApiService
      */
     private function convertProducts(array $products, float $rate): array
     {
+        /**
+         * CurrencyId:
+         *     Dollar - 1
+         *     GRN - 2
+         */
         $result = [];
         foreach ($products as $product) {
             $prices = [];
             foreach ($product['prices'] as $price) {
-                if (1 === $price['category_id']) {
-                    $price['price'] = round($price['price'] / $rate, 2);
-                }
+                $categoryId = (int)$price['category_id'];
 
                 $prices[] = [
                     'price' => (float)$price['price'],
-                    'customer_group_id' => (int)$price['category_id'],
+                    'customer_group_id' => $categoryId,
+                    'currency_id' => 1 === $categoryId ? 2 : 1,
                 ];
             }
 
