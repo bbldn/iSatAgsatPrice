@@ -5,7 +5,6 @@ namespace App\Console;
 use App\Console\Commands\AgsatCacheShowCommand;
 use App\Console\Commands\AgsatCacheUpdateCommand;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
-use Mlntn\Console\Commands\Serve;
 
 class Kernel extends ConsoleKernel
 {
@@ -15,7 +14,6 @@ class Kernel extends ConsoleKernel
      * @psalm-var list<class-string>
      */
     protected $commands = [
-        Serve::class,
         AgsatCacheShowCommand::class,
         AgsatCacheUpdateCommand::class,
     ];

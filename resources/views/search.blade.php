@@ -1,11 +1,17 @@
-<html>
+<html lang="ru">
 
-<head>
+<style>
+    table, th, td {
+        border: 1px solid black;
+    }
 
-</head>
+    table {
+        width: 100%;
+    }
+</style>
 
 <body>
-<table border="1" style="width: 100%">
+<table>
     <tr>
         <td>Название</td>
         <td>Артикул</td>

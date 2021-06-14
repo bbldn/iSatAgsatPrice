@@ -13,16 +13,14 @@
         "ext-json": "*",
         "ext-simplexml": "*",
         "guzzlehttp/guzzle": "^6.3",
-        "laravel/lumen-framework": "^7.2.1",
-        "mlntn/lumen-artisan-serve": "^1.3",
+        "symfony/dom-crawler": "^5.1",
         "symfony/css-selector": "^5.1",
-        "symfony/dom-crawler": "^5.1"
+        "laravel/lumen-framework": "^7.2.1"
     },
     "require-dev": {
-        "fzaninotto/faker": "^1.9.1",
+        "vimeo/psalm": "^4.5",
         "mockery/mockery": "^1.4.1",
-        "phpunit/phpunit": "^9.2.6",
-        "vimeo/psalm": "^4.5"
+        "phpunit/phpunit": "^9.2.6"
     },
     "autoload": {
         "psr-4": {
