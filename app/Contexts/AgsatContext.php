@@ -5,13 +5,13 @@ namespace App\Contexts;
 class AgsatContext
 {
     /** @var string */
-    protected $login;
+    private $login;
 
     /** @var string */
-    protected $password;
+    private $password;
 
     /** @var string */
-    protected $userAgent;
+    private $userAgent;
 
     /**
      * AgsatContext constructor.

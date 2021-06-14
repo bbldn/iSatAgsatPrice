@@ -24,6 +24,8 @@ class AgsatService
     /**
      * @param array $cookies
      * @return string
+     *
+     * @psalm-param array<string, string> $cookies
      */
     public function getAll(array $cookies = []): string
     {
@@ -47,6 +49,8 @@ class AgsatService
     /**
      * @param array $cookies
      * @return float
+     *
+     * @psalm-param array<string, string> $cookies
      */
     public function getGRNRate(array $cookies = []): float
     {
@@ -74,7 +78,9 @@ class AgsatService
     }
 
     /**
-     * @return array<string, string>
+     * @return array
+     *
+     * @psalm-return array<string, string>
      */
     protected function login(): array
     {
@@ -91,7 +97,9 @@ class AgsatService
 
     /**
      * @param Response $response
-     * @return array<string, string>
+     * @return array
+     *
+     * @psalm-return array<string, string>
      */
     protected function parseCookies(Response $response): array
     {

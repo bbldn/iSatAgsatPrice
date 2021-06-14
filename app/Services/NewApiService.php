@@ -2,14 +2,25 @@
 
 namespace App\Services;
 
+/**
+ * @psalm-type CustomerGroupPsalm = array{id: int, name: string}
+ * @psalm-type CategoryPsalm = array{id: int, url: string, name: string, parent_id: int}
+ * @psalm-type ProductPricePsalm = array{price: float, currency_id: int, customer_group_id: int}
+ * @psalm-type ProductPsalm = array{id: int, shu_id: int, category_id: int, url: string, sku: string, name: string, prices: list<ProductPricePsalm>}
+ * @psalm-type NewApiFormatPsalm = array{
+ *     rate: float,
+ *     products: list<ProductPsalm>,
+ *     categories: list<CategoryPsalm>,
+ *     customerGroups: list<CustomerGroupPsalm>
+ * }
+ */
 class NewApiService
 {
     /**
      * @param array $customerGroups
-     * @return array<array{
-     *     id: int,
-     *     name: string
-     * }>
+     * @return array
+     *
+     * @psalm-return list<CustomerGroupPsalm>
      */
     private function convertCustomerGroup(array $customerGroups): array
     {
@@ -29,12 +40,9 @@ class NewApiService
 
     /**
      * @param array $categories
-     * @return array<array{
-     *     id: int,
-     *     url: string,
-     *     name: string,
-     *     parent_id: int,
-     * }>
+     * @return array
+     *
+     * @psalm-return list<CategoryPsalm>
      */
     private function convertCategories(array $categories): array
     {
@@ -53,21 +61,11 @@ class NewApiService
 
     /**
      * @param array $products
-     * @param float $rate
-     * @return array<array{
-     *     id: int,
-     *     sku: int,
-     *     url: string,
-     *     shu_id: int,
-     *     name: string,
-     *     category_id: int,
-     *     prices: array<array{
-     *         price: int,
-     *         customer_group_id: int,
-     *     }>
-     * }>
+     * @return array
+     *
+     * @psalm-return list<ProductPsalm>
      */
-    private function convertProducts(array $products, float $rate): array
+    private function convertProducts(array $products): array
     {
         /**
          * CurrencyId:
@@ -104,36 +102,14 @@ class NewApiService
     /**
      * @param array $data
      * @param float $rate
-     * @return array{
-     *     rate: float,
-     *     categories: array<array{
-     *         id: int,
-     *         url: string,
-     *         name: string,
-     *         parent_id: int,
-     *     }>,
-     *     products: array<array{
-     *         id: int,
-     *         sku: int,
-     *         url: string,
-     *         shu_id: int,
-     *         name: string,
-     *         category_id: int,
-     *         prices: array<array{
-     *             price: int,
-     *             customer_group_id: int,
-     *         }>
-     *     }>,
-     *     customerGroups: array<array{
-     *         id: int,
-     *         name: string
-     *     }>,
-     * }
+     * @return array
+     *
+     * @psalm-return NewApiFormatPsalm
      */
     public function convertToNewApiFormat(array $data, float $rate): array
     {
+        $products = $this->convertProducts($data['products']);
         $categories = $this->convertCategories($data['categories']);
-        $products = $this->convertProducts($data['products'], $rate);
         $customerGroups = $this->convertCustomerGroup($data['contact_categories']);
 
         return [

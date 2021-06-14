@@ -10,26 +10,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ApiController extends Controller
 {
-    /**
-     * @param array|null $data
-     * @return null|array{
-     *     ok: boolean,
-     *     errors: array<string>,
-     * }
-     */
-    protected function validateData(?array $data): ?array
-    {
-        if (null === $data) {
-            return [
-                'ok' => false,
-                'errors' => [
-                    'No data found, refresh cache',
-                ],
-            ];
-        }
-
-        return null;
-    }
 
     /**
      * @return Response
@@ -58,7 +38,7 @@ class ApiController extends Controller
         $data = json_decode($data, true);
 
         if (false === $data) {
-            return response()->json($this->validateData($data));
+            return response()->json([]);
         }
 
         return response($data)->header('Content-Type', 'application/json');
